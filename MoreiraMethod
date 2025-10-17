@@ -1,0 +1,121 @@
+a<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Moreira Method V2 (not patched) 🔥</title>
+  <meta name="description" content="Select a category before joining the Roblox server.">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --text: #e6edf3;
+      --accent: #1f6feb;
+      --hover: #238636;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.3rem;
+      margin-bottom: 2rem;
+      letter-spacing: 0.5px;
+    }
+    .box-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      width: 100%;
+      max-width: 700px;
+      margin-bottom: 2rem;
+    }
+    .box {
+      background-color: var(--card);
+      border: 2px solid transparent;
+      border-radius: var(--radius);
+      padding: 1.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      user-select: none;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .box:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+    .box.active {
+      border-color: var(--hover);
+      background-color: #1a1f2b;
+    }
+    .btn {
+      background-color: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+      text-decoration: none;
+    }
+    .btn:hover {
+      background-color: var(--hover);
+    }
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #8b949e;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔥 Moreira Method</h1>
+
+  <div class="box-container">
+    <div class="box" data-name="strawberry">Strawberry Elephant (if you are lucky you get one)</div>
+    <div class="box" data-name="burguro">Burguro and Fryuro</div>
+    <div class="box" data-name="ketchuru">Ketchuru and Musturu</div>
+    <div class="box" data-name="garama">Garama and Madungdung</div>
+    <div class="box" data-name="ketupat">Ketupat Kepat</div>
+    <div class="box" data-name="los67">Los 67</div>
+  </div>
+
+  <a id="joinBtn" class="btn" href="https://www.roblox.com/share?code=10c75d109cd04a42960cb227f56532c2&type=Server" target="_blank" rel="noopener noreferrer">
+    Join Server
+  </a>
+  
+  <footer>
+    © <span id="year"></span> Moreira Method
+  </footer>
+
+  <script>
+    // Auto update year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Box click highlight
+    const boxes = document.querySelectorAll('.box');
+    boxes.forEach(box => {
+      box.addEventListener('click', () => {
+        boxes.forEach(b => b.classList.remove('active'));
+        box.classList.add('active');
+      });
+    });
+  </script>
+</body>
+
+</html>
