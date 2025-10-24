@@ -213,7 +213,267 @@ footer { margin-top:3rem; text-align:center; font-size:0.9rem; color:var(--muted
 </a>
 <div class="join-note">Click a box to select a server. Times update live (≤ 60 min).</div>
 
-<footer>© <span id="year"></span> Moreira Method</footer>
+<footer style="margin-top:0.6rem;text-align:center;font-size:0.9rem;color:var(--muted);z-index:10;position:relative;bottom:auto;">
+  © <span id="year"></span> Moreira Method
+</footer>
+
+<!-- ======= ADDED: persistent live count badge + vouch feed on the right (scoped & non-intrusive) ======= -->
+<style>
+/* scoped additions - unique class prefixes to avoid touching your styles */
+.mm-live-badge {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 120;
+  background: rgba(14,18,24,0.92);
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.04);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+.mm-live-badge .mm-number {
+  font-family: monospace;
+  color: #9aff60;
+  background: rgba(0,0,0,0.2);
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+/* vouch feed container on the right */
+.mm-vouch-container {
+  position: fixed;
+  right: 20px;
+  top: 22%;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 110;
+  pointer-events: none; /* don't block clicks */
+  font-family: 'Montserrat', sans-serif;
+}
+.mm-vouch {
+  pointer-events: auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background: rgba(20,24,30,0.94);
+  border: 1px solid rgba(255,255,255,0.04);
+  padding:10px 12px;
+  border-radius:12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  transform: translateX(100%);
+  opacity:0;
+}
+/* small avatar circle */
+.mm-vouch .mm-dot {
+  flex-shrink:0;
+  width:44px; height:44px; border-radius:999px;
+  background: linear-gradient(180deg,#ff9a3b,#ff3b3b);
+  display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800;
+  font-size:0.95rem;
+  box-shadow: 0 6px 18px rgba(255,60,60,0.12);
+}
+.mm-vouch .mm-text { font-weight:700; font-size:0.9rem; color:var(--text); line-height:1.05; }
+.mm-vouch .mm-server { display:block; font-weight:900; color:#ffdede; font-size:0.86rem; margin-top:4px; }
+
+/* animations */
+@keyframes mm-slideIn {
+  0% { transform: translateX(100%); opacity:0; }
+  60% { transform: translateX(-6%); opacity:1; }
+  100% { transform: translateX(0); opacity:1;}
+}
+@keyframes mm-slideOut {
+  0% { transform: translateX(0); opacity:1; }
+  100% { transform: translateX(110%); opacity:0; }
+}
+.mm-vouch.mm-in { animation: mm-slideIn 600ms cubic-bezier(.2,.9,.2,1) forwards; }
+.mm-vouch.mm-out { animation: mm-slideOut 500ms ease forwards; }
+
+/* show max 2 at once */
+.mm-vouch-container .mm-vouch:nth-child(n+3) { display:none; }
+
+@media (max-width:920px){
+  /* hide vouch on narrow screens so layout stays intact */
+  .mm-vouch-container { display:none; }
+  .mm-live-badge { right: 12px; top: 12px; }
+}
+</style>
+
+<div class="mm-live-badge" id="mmLiveBadge" title="Players (persistent)">
+  🔥 <span class="mm-number" id="mmLiveNumber">--</span> players live
+</div>
+
+<div class="mm-vouch-container" id="mmVouchContainer" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+/* Scoped module to avoid collisions with your page functions/vars */
+(function mmFeatureModule(){
+  // CONFIG
+  const LS_KEY = 'moreira_method_live_count';
+  const DEFAULT_COUNT = 14;
+  const FLUCT_MIN_INTERVAL = 15000; // 15s
+  const FLUCT_MAX_INTERVAL = 25000; // 25s
+  const VOUCH_MIN_INTERVAL = 10000; // 10s
+  const VOUCH_MAX_INTERVAL = 20000; // 20s
+  const VOUCH_DISPLAY_MS = 6000;
+  const MIN_COUNT = 8;
+  const MAX_COUNT = 22;
+
+  const serverPhrases = [
+    'a Strawberry Elephant server',
+    'a Burguro and Fryuro server',
+    'a Ketchuru and Musturu server',
+    'a Garama and Mandundung server',
+    'a Spooky and Pumpky server',
+    'a Meowl server'
+  ];
+
+  const nameParts = {
+    first: ['alex','sam','mari','luca','kai','mia','nora','zane','ryan','iona','leo','ava','ryu','omar','eli','aya','mo','tori','max','ivy','dex','cody','milo','sara','noah'],
+    mid: ['xo','ri','ba','do','ku','la','na','vi','ro','su','te','li','mi','jo','za','ki','ra','ne'],
+    end: ['son','a','us','ka','ra','ber','ly','ez','in','an','ix','ba','lo','en']
+  };
+
+  // helpers
+  function _randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+  function _pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  // persistent live count
+  function _initLiveCount(){
+    try {
+      let v = localStorage.getItem(LS_KEY);
+      if(!v){
+        v = String(DEFAULT_COUNT);
+        localStorage.setItem(LS_KEY, v);
+      }
+      _renderLiveCount(parseInt(v,10) || DEFAULT_COUNT);
+    } catch(e){
+      _renderLiveCount(DEFAULT_COUNT);
+    }
+  }
+  function _renderLiveCount(n){
+    const el = document.getElementById('mmLiveNumber');
+    if(el) el.textContent = String(n);
+  }
+
+  // fluctuate the count up/down (by -3..+3) and clamp
+  function _fluctuateOnce(){
+    try {
+      let cur = parseInt(localStorage.getItem(LS_KEY),10);
+      if(!Number.isFinite(cur)) cur = DEFAULT_COUNT;
+      const delta = _randInt(-3,3);
+      let next = cur + delta;
+      if(next < MIN_COUNT) next = MIN_COUNT;
+      if(next > MAX_COUNT) next = MAX_COUNT;
+      localStorage.setItem(LS_KEY, String(next));
+      _renderLiveCount(next);
+    } catch(e){}
+    _scheduleNextFluctuate();
+  }
+  function _scheduleNextFluctuate(){
+    const delay = _randInt(FLUCT_MIN_INTERVAL, FLUCT_MAX_INTERVAL);
+    setTimeout(_fluctuateOnce, delay);
+  }
+
+  // vouch name generation + censor
+  function _makeName(){
+    const f = _pick(nameParts.first);
+    const m = Math.random() < 0.5 ? _pick(nameParts.mid) : '';
+    const e = _pick(nameParts.end);
+    const raw = (f + m + e).toLowerCase();
+    const withNum = Math.random() < 0.25 ? raw + (10 + Math.floor(Math.random()*89)) : raw;
+    return withNum;
+  }
+  function _censorName(name){
+    if(!name) return 'a***b';
+    const clean = name.replace(/[^a-z0-9]/ig,'');
+    if(clean.length <= 3){
+      return clean[0] + '*'.repeat(Math.max(1, clean.length-2)) + (clean.slice(-1) || '');
+    }
+    const first = clean.slice(0,1);
+    const last2 = clean.slice(-2);
+    const stars = '*'.repeat(Math.max(3, clean.length - 3));
+    return first + stars + last2;
+  }
+
+  // show one vouch box
+  function _showVouch(){
+    const container = document.getElementById('mmVouchContainer');
+    if(!container) return;
+    const name = _makeName();
+    const cens = _censorName(name);
+    const server = _pick(serverPhrases);
+
+    const v = document.createElement('div');
+    v.className = 'mm-vouch';
+    const dot = document.createElement('div');
+    dot.className = 'mm-dot';
+    dot.textContent = (cens[0] || 'A').toUpperCase();
+
+    const txt = document.createElement('div');
+    txt.className = 'mm-text';
+    txt.innerHTML = `<span class="mm-user">${cens}</span> just got <span class="mm-server">${server}!</span>`;
+
+    v.appendChild(dot);
+    v.appendChild(txt);
+
+    container.insertBefore(v, container.firstChild);
+    // animate in
+    requestAnimationFrame(()=> v.classList.add('mm-in'));
+
+    // schedule out
+    setTimeout(()=>{
+      v.classList.remove('mm-in');
+      v.classList.add('mm-out');
+      setTimeout(()=> { if(v && v.parentNode) v.parentNode.removeChild(v); }, 520);
+    }, VOUCH_DISPLAY_MS);
+  }
+
+  // schedule vouches recursively
+  function _scheduleNextVouch(){
+    const t = _randInt(VOUCH_MIN_INTERVAL, VOUCH_MAX_INTERVAL);
+    setTimeout(()=> { _showVouch(); _scheduleNextVouch(); }, t);
+  }
+
+  // init everything
+  _initLiveCount();
+  // start fluctuation cycle after a short delay to show initial
+  setTimeout(()=>{ _scheduleNextVouch(); _scheduleNextFluctuate(); }, 800);
+
+  // small initial vouch
+  setTimeout(_showVouch, 1200);
+
+  // bump when Join clicked (local-only)
+  const joinBtn = document.getElementById('joinBtn');
+  if(joinBtn){
+    joinBtn.addEventListener('click', function(){
+      try {
+        const cur = parseInt(localStorage.getItem(LS_KEY),10) || DEFAULT_COUNT;
+        const next = Math.min(cur + 1, MAX_COUNT);
+        localStorage.setItem(LS_KEY, String(next));
+        _renderLiveCount(next);
+      } catch(e){}
+    });
+  }
+
+  // expose testing methods for console (optional)
+  window.MM_Live = {
+    set(n){ localStorage.setItem(LS_KEY, String(n)); _renderLiveCount(n); },
+    triggerVouch(){ _showVouch(); },
+    forceFluctuate(){ _fluctuateOnce(); }
+  };
+
+})(); /* mmFeatureModule end */
+</script>
+<!-- ======= END ADDED BLOCK ======= -->
 
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
@@ -266,5 +526,3 @@ window.addEventListener('beforeunload',()=>{timers.forEach(id=>clearInterval(id)
 
 </body>
 </html>
-
-
