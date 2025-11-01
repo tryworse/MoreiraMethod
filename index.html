@@ -25,7 +25,7 @@ body {
   align-items: center;
   justify-content: flex-start;
   min-height: 100vh;
-  padding: 3.6rem 2rem 2rem;
+  padding: 2rem 2rem 2rem;
   position: relative;
   overflow-x: hidden;
   z-index: 1;
@@ -76,11 +76,12 @@ body {
   flex-shrink: 0;
 }
 
-/* Heading */
+/* Title - moved up slightly */
 h1 {
   text-align: center;
   font-size: 2.8rem;
-  margin-bottom: 2rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1.2rem;
   letter-spacing: 1px;
   font-weight: 900;
   background: linear-gradient(90deg,
@@ -92,8 +93,39 @@ h1 {
   text-shadow: 0 0 6px rgba(255,255,255,0.03), 0 2px 18px rgba(0,0,0,0.6);
   z-index: 10;
 }
-@keyframes rainbow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-@keyframes shine { 0%{filter:brightness(1)} 50%{filter:brightness(1.08)} 100%{filter:brightness(1)} }
+@keyframes rainbow { 
+  0%{background-position:0% 50%} 
+  50%{background-position:100% 50%} 
+  100%{background-position:0% 50%} 
+}
+@keyframes shine { 
+  0%{filter:brightness(1)} 
+  50%{filter:brightness(1.08)} 
+  100%{filter:brightness(1)} 
+}
+
+/* Download App Button - smaller and placed below the title */
+.download-app {
+  margin-top: 0.5rem;
+  background-color: var(--card);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.4rem 0.8rem;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(31,111,235,0.25);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+.download-app:hover {
+  border-color: var(--hover);
+  color: var(--hover);
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(35,134,54,0.35);
+}
 
 /* Boxes */
 .box-container {
@@ -102,6 +134,7 @@ h1 {
   gap: 1rem;
   width: 100%;
   max-width: 700px;
+  margin-top: 2.2rem;
   margin-bottom: 2rem;
   z-index: 10;
 }
@@ -129,20 +162,12 @@ h1 {
 }
 .box:hover { border-color: var(--accent); transform: translateY(-3px); }
 .box.active { border-color: rgba(255,80,80,0.95); background-color: rgba(27,17,18,0.9); box-shadow: 0 8px 30px rgba(255,60,60,0.12),0 0 18px rgba(255,80,80,0.08); transform: translateY(-4px); }
-
 .box img { max-width: 100%; display:block; object-fit: cover; }
-.box[data-name="strawberry"] img,
-.box[data-name="burguro"] img,
-.box[data-name="ketchuru"] img,
-.box[data-name="garama"] img { width: 100px; height: 100px; }
-.box[data-name="ketupat"] img,
-.box[data-name="los67"] img { width: 80px; height: auto; }
 
 /* Join Button */
 .btn { background-color: var(--accent); color: #fff; border:none; border-radius: var(--radius); padding:1rem 2rem; font-size:1.1rem; cursor:pointer; transition: all 0.25s ease; box-shadow:0 8px 30px rgba(255,60,60,0.12),0 0 18px rgba(255,80,80,0.12); z-index:10; text-decoration:none; }
 .btn:hover { background-color:#ff4b4b; transform: translateY(-4px); }
 
-/* Mins Row */
 .mins-row { display:flex; align-items:center; gap:8px; margin-top:8px; color:#cbd5e1; font-size:14px; font-weight:900; }
 .mins-dot { width:8px;height:8px;border-radius:50%;background: linear-gradient(180deg,#ff8b8b,#ff3b3b); box-shadow:0 0 10px rgba(255,60,60,0.6);}
 .mins-text { font-weight:900;color:var(--text); min-width:44px; text-align:left;}
@@ -152,7 +177,12 @@ h1 {
 .join-note { margin-top: 8px; color: var(--muted); font-size:0.95rem; font-weight:600; text-align:center; z-index:10; }
 footer { margin-top:3rem; text-align:center; font-size:0.9rem; color:var(--muted); z-index:10; position: relative; }
 
-@media (max-width:520px){ .box { min-height:140px } .avatar-img { width:48px;height:48px } body { padding-top:3.2rem } h1 { font-size:24px } }
+@media (max-width:520px){ 
+  .box { min-height:140px } 
+  .avatar-img { width:48px;height:48px } 
+  body { padding-top:3.2rem } 
+  h1 { font-size:24px } 
+}
 </style>
 </head>
 <body>
@@ -168,7 +198,14 @@ footer { margin-top:3rem; text-align:center; font-size:0.9rem; color:var(--muted
   <span>Want to team? Add me!</span>
 </a>
 
+<!-- Title -->
 <h1>🔥 Moreira Method</h1>
+
+<a class="download-app" href="https://github.com/tryworse/MoreiraMethod/releases/download/v1.0/MoreiraMethod.exe">
+  Want More Chances Of Getting A Server? Download Our App!
+</a>
+
+
 
 <div class="box-container" id="boxContainer">
     <div class="box" data-name="strawberry" data-server="Strawberry Elephant (if you are lucky you get one)">
